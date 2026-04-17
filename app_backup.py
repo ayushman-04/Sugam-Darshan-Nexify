@@ -1,6 +1,3 @@
-from google_auth_oauthlib.flow import Flow
-import requests
-import os
 from flask import Flask, render_template, request, jsonify
 import os
 from werkzeug.utils import secure_filename
@@ -17,7 +14,6 @@ from dotenv import load_dotenv
 import random
 import smtplib
 from email.message import EmailMessage
-os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 
 
@@ -161,49 +157,6 @@ def devotee_register():
 
     return render_template("devotee_register.html")
 
-#-----google login-----
-@app.route("/google-login")
-def google_login():
-    flow = Flow.from_client_secrets_file(
-        "client_secret.json",
-        scopes=[
-            "https://www.googleapis.com/auth/userinfo.profile",
-            "https://www.googleapis.com/auth/userinfo.email",
-            "openid"
-        ],
-        redirect_uri="http://127.0.0.1:5000/google-callback"
-    )
-
-    authorization_url, state = flow.authorization_url()
-    session["state"] = state
-    return redirect(authorization_url)
-
-@app.route("/google-callback")
-def google_callback():
-    flow = Flow.from_client_secrets_file(
-        "client_secret.json",
-        scopes=[
-            "https://www.googleapis.com/auth/userinfo.profile",
-            "https://www.googleapis.com/auth/userinfo.email",
-            "openid"
-        ],
-        state=session["state"],
-        redirect_uri="http://127.0.0.1:5000/google-callback"
-    )
-
-    flow.fetch_token(authorization_response=request.url)
-
-    credentials = flow.credentials
-
-    userinfo_endpoint = "https://www.googleapis.com/oauth2/v1/userinfo"
-    response = requests.get(userinfo_endpoint, params={"access_token": credentials.token})
-    user_info = response.json()
-
-    # ONLY SESSION (no DB change)
-    session["devotee_id"] = user_info["id"]
-    session["user_name"] = user_info["name"]
-
-    return redirect(url_for("devdash"))
 # ---------------- LOGOUT ----------------
 @app.route("/logout")
 def logout():
@@ -463,7 +416,7 @@ def predict():
     predicted_crowd = predict_crowd(temple_id)
     wait_time = predict_wait_time(temple_id, crowd_count)
     risk = classify_risk(temple_id, crowd_count, wait_time)
-    print("RETURNING:", crowd_count, wait_time, risk)
+
     return jsonify({
     "crowd_count": int(crowd_count),
     "predicted_crowd": int(predicted_crowd),
@@ -522,6 +475,5 @@ def weather_api(temple):
 
 
 # ---------------- RUN ----------------
-print(app.url_map)
 if __name__ == "__main__":
     app.run(debug=True)

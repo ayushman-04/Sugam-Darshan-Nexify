@@ -17,6 +17,7 @@
     <h2>Pilgrim Login</h2>
     <p>Enter your spiritual journey</p>
 
+    <!-- LOGIN FORM -->
     <form method="post">
       <input
         type="text"
@@ -31,14 +32,31 @@
         placeholder="Enter your password"
         required
       >
+
       <button type="submit">
         Begin Spiritual Journey
       </button>
     </form>
-<a href="{{ url_for('forgot_password') }}">Forgot Password?</a>
 
-    <p class="small">Don't have an account?</p>
+    <!-- GOOGLE LOGIN BUTTON (OUTSIDE FORM) -->
+    <div style="margin-top:20px; text-align:center;">
+        <a href="/google-login">
+            <img 
+                src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png"
+                alt="Sign in with Google"
+                style="width:100%; max-width:260px; display:block; margin:auto;">
+        </a>
+    </div>
+
+    <!-- LINKS -->
+    <div style="margin-top:15px; text-align:center;">
+        <a href="{{ url_for('forgot_password') }}">Forgot Password?</a>
+    </div>
+
+    <p class="small" style="margin-top:10px;">Don't have an account?</p>
     <a href="{{ url_for('devotee_register') }}">Create New Account</a>
+
   </div>
 </div>
+
 {% endblock %}
