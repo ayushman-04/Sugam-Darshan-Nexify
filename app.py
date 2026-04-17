@@ -113,6 +113,7 @@ def devotee_login():
             return "Invalid username or password"
 
     return render_template("devotee_login.html")
+    
 
 # ---------------- ADMIN LOGIN ----------------
 @app.route("/admin-login", methods=["GET", "POST"])
@@ -417,12 +418,11 @@ def predict():
     risk = classify_risk(temple_id, crowd_count, wait_time)
 
     return jsonify({
-        "crowd_count": crowd_count,
-        "predicted_crowd": predicted_crowd,
-        "wait_time": wait_time,
-        "risk": risk,
-        "video_path": output_path
-    })
+    "crowd_count": int(crowd_count),
+    "predicted_crowd": int(predicted_crowd),
+    "wait_time": int(wait_time),
+    "risk": str(risk)
+})
 
 # ---------------- MAP API ----------------
 @app.route("/temple-places")
