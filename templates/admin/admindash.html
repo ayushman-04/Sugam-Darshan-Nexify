@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block nav %}
+<a href="#dashboard">Dashboard</a>
+<a href="#crowd">Crowd Monitoring</a>
+<a href="#cctv">CCTV & Threat Detection</a>
+<a href="#alerts">Alerts</a>
+<a href="{{ url_for('admin_view_devotees') }}">View Devotees</a>
+<a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+{% endblock %}
+
+{% block content %}
+
+<!-- ================= DASHBOARD ================= -->
+<div class="admin-container" id="dashboard">
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h3>Visitors Today</h3>
+      <p class="big">1348</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Crowd Density</h3>
+      <p class="big warning">Medium</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Avg Wait Time</h3>
+      <p class="big">57 mins</p>
+    </div>
+
+    <div class="stat-card danger">
+      <h3>Emergencies</h3>
+      <p class="big">1 Active</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Weather</h3>
+      <p class="big">Sunny</p>
+    </div>
+  </div>
+
+  <!-- CHART + QUICK ACTIONS -->
+  <div class="middle-grid">
+
+    <div class="panel">
+      <h3>📊 Crowd History (Today)</h3>
+      <canvas id="crowdChart"></canvas>
+    </div>
+
+    <div class="panel quick-panel">
+      <h3>⚡ Quick Actions</h3>
+
+      <button class="action-btn">📷 View Camera Feeds</button>
+      <button class="action-btn">👮 Staff Allocation</button>
+      <button class="action-btn">📢 Send Broadcast</button>
+      <button class="action-btn">📄 Generate Report</button>
+
+      <div class="calendar-card">
+        <h4>📅 Upcoming Festivals</h4>
+        <ul class="festival-list">
+          <li><span class="dot"></span> Jan 9 – Paush Purnima</li>
+          <li><span class="dot"></span> Jan 14 – Makar Sankranti</li>
+          <li><span class="dot"></span> Jan 28 – Mauni Amavasya</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ================= CROWD ================= -->
+<section id="crowd" class="panel" style="margin-top:40px;">
+  <h3>👥 Crowd Monitoring</h3>
+  <p>Live crowd density, gate-wise load and AI-based risk analysis.</p>
+
+  <div class="stats-grid">
+    <div class="stat-card"><h3>Gate 1</h3><p class="big warning">High</p></div>
+    <div class="stat-card"><h3>Gate 2</h3><p class="big">Medium</p></div>
+    <div class="stat-card"><h3>Gate 3</h3><p class="big">Low</p></div>
+  </div>
+</section>
+
+<!-- ================= CCTV ================= -->
+<section id="cctv" class="panel" style="margin-top:40px;">
+  <h3>📷 CCTV & Threat Detection</h3>
+
+  <div class="middle-grid">
+    <div class="panel">
+      <video src="/static/sample.mp4" controls width="100%"></video>
+    </div>
+
+    <div class="panel danger">
+      <h4>⚠ Threat Alert</h4>
+      <p>Status: Theft Detected</p>
+      <p>Location: Gate 3</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ALERTS ================= -->
+<section id="alerts" class="panel" style="margin-top:40px;">
+  <h3>🚨 Alerts</h3>
+  <ul class="festival-list">
+    <li><span class="dot"></span> Overcrowding at Gate 1</li>
+    <li><span class="dot"></span> Medical team dispatched</li>
+    <li><span class="dot"></span> CCTV anomaly detected</li>
+  </ul>
+</section>
+
+{% endblock %}
+
+{% block js %}
+<script>
+new Chart(document.getElementById('crowdChart'), {
+  type: 'bar',
+  data: {
+    labels: ['9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM'],
+    datasets: [{
+      data: [550,700,850,780,650,500,400],
+      backgroundColor: '#ffa726',
+      borderColor: '#000',
+      borderWidth: 2,
+      barThickness: 38
+    }]
+  },
+  options: { plugins:{legend:{display:false}} }
+});
+</script>
+{% endblock %}
