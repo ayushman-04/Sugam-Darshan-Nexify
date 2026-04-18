@@ -509,7 +509,7 @@ def weather_api(temple):
     r = requests.get(url)
     data = r.json()
 
-    print("RAW WEATHER:", data)  # VERY IMPORTANT
+    #print("RAW WEATHER:", data)  # VERY IMPORTANT
 
     if "weather" not in data:
         return jsonify({"error": data}), 500
@@ -520,6 +520,29 @@ def weather_api(temple):
         "humidity": data["main"]["humidity"]
     })
 
+#-------emergency------
+emergency_data = []
+
+@app.route("/emergency", methods=["POST"])
+def emergency():
+    data = request.get_json()
+
+    entry = {
+        "type": data["type"],
+        "lat": data["lat"],
+        "lon": data["lon"]
+    }
+
+    emergency_data.append(entry)
+
+    print("🚨 EMERGENCY:", entry)
+
+    return jsonify({"status": "success"})
+
+
+@app.route("/get-emergency")
+def get_emergency():
+    return jsonify(emergency_data)
 
 # ---------------- RUN ----------------
 print(app.url_map)

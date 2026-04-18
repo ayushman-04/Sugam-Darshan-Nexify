@@ -462,7 +462,7 @@ def weather_api(temple):
     r = requests.get(url)
     data = r.json()
 
-    print("RAW WEATHER:", data)  # VERY IMPORTANT
+    #print("RAW WEATHER:", data)  # VERY IMPORTANT
 
     if "weather" not in data:
         return jsonify({"error": data}), 500

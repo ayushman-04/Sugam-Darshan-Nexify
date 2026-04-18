@@ -32,22 +32,22 @@
   <div class="temple-grid">
 
     <a href="/devotee/temple/mahakaleshwar" class="temple-card">
-      <img src="{{ url_for('static', filename='img/m.jpg') }}" alt="Mahakaleshwar">
+      <img src="{{ url_for('static', filename='img/m.jpg') }}">
       <p>Mahakaleshwar</p>
     </a>
 
     <a href="/devotee/temple/kashi" class="temple-card">
-      <img src="{{ url_for('static', filename='img/k.jpg') }}" alt="Kashi Vishwanath">
+      <img src="{{ url_for('static', filename='img/k.jpg') }}">
       <p>Kashi Vishwanath</p>
     </a>
 
     <a href="/devotee/temple/sabarimala" class="temple-card">
-      <img src="{{ url_for('static', filename='img/s.jpg') }}" alt="Sabarimala">
+      <img src="{{ url_for('static', filename='img/s.jpg') }}">
       <p>Sabarimala</p>
     </a>
 
     <a href="/devotee/temple/tirupati" class="temple-card">
-      <img src="{{ url_for('static', filename='img/t.jpg') }}" alt="Tirupati Balaji">
+      <img src="{{ url_for('static', filename='img/t.jpg') }}">
       <p>Tirupati Balaji</p>
     </a>
 
@@ -55,4 +55,75 @@
 
 </div>
 
+<!-- 🚨 EMERGENCY SECTION (OUTSIDE MAIN CONTAINER) -->
+<div style="margin:50px auto; max-width:600px; padding:25px; border:2px solid red; border-radius:10px; background:#fff3f3; text-align:center;">
+
+  <h3 style="color:red;">🚨 Emergency Help</h3>
+
+  <select id="emergencyType" style="padding:10px; width:220px;">
+    <option value="injury">Injury</option>
+    <option value="theft">Theft</option>
+    <option value="pregnancy">Pregnancy</option>
+    <option value="elder">Elderly Help</option>
+    <option value="disability">Disability Assistance</option>
+  </select>
+
+  <br><br>
+
+  <button onclick="sendEmergency()" 
+          style="background:red; color:white; padding:12px 25px; border:none; cursor:pointer; border-radius:5px;">
+      🚨 Request Emergency Help
+  </button>
+
+  <p id="emergencyStatus" style="margin-top:10px;"></p>
+
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+function sendEmergency() {
+    let type = document.getElementById("emergencyType").value;
+
+    if (navigator.geolocation) {
+
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                // ✅ REAL LOCATION
+                sendToServer(type, position.coords.latitude, position.coords.longitude);
+            },
+
+            function() {
+                // fallback
+                alert("Using approximate location");
+                sendToServer(type, 23.1828, 75.7680);
+            }
+        );
+
+    } else {
+        sendToServer(type, 23.1828, 75.7680);
+    }
+}
+
+function sendToServer(type, lat, lon) {
+
+    fetch("/emergency", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            type: type,
+            lat: lat,
+            lon: lon
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("emergencyStatus").innerText =
+            "🚑 Help is on the way! Location shared.";
+    });
+}
+</script>
 {% endblock %}

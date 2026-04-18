@@ -5,7 +5,22 @@
   padding: 40px 30px;
   text-align: center;
 }
+/* FIX BUTTON NOT CLICKABLE */
+.emergency-container {
+  position: relative;
+  z-index: 10;
+}
 
+.sos-btn {
+  position: relative;
+  z-index: 20;
+}
+
+/* Prevent other sections from overlapping */
+.panel, .middle-grid, .temple-grid, .dashboard-container {
+  position: relative;
+  z-index: 1;
+}
 /* TITLE */
 .emergency-title {
   color: #d00000;

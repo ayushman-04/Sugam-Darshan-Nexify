@@ -121,11 +121,10 @@
 
 <!-- ================= ALERTS ================= -->
 <section id="alerts" class="panel" style="margin-top:40px;">
-  <h3> Alerts</h3>
-  <ul class="festival-list">
-    <li><span class="dot"></span> Overcrowding at Gate 1</li>
-    <li><span class="dot"></span> Medical team dispatched</li>
-    <li><span class="dot"></span> CCTV anomaly detected</li>
+  <h3> 🚨 Emergency Alerts</h3>
+
+  <ul class="festival-list" id="emergencyList">
+    <li>No emergencies yet</li>
   </ul>
 </section>
 
@@ -183,11 +182,45 @@ function runDetection(){
 
         // 🔥 FALLBACK (so demo NEVER fails)
         document.getElementById("result").innerHTML =
-            "👥 People Count: 1348<br>" +
-            "📊 Density: Medium<br>" +
-            "📈 Growth: Increasing<br>" +
-            "⚠ Risk Level: HIGH";
+            " People Count: 1348<br>" +
+            " Density: Medium<br>" +
+            " Growth: Increasing<br>" +
+            " Risk Level: HIGH";
     });
+
 }
+// 🚨 LIVE EMERGENCY (THIS WAS MISSING)
+setInterval(() => {
+    fetch("/get-emergency")
+    .then(res => res.json())
+    .then(data => {
+
+        let list = document.getElementById("emergencyList");
+        if(!list) return;
+
+        list.innerHTML = "";
+
+        if(data.length === 0){
+            list.innerHTML = "<li>No emergencies</li>";
+            return;
+        }
+
+        data.forEach(e => {
+            let li = document.createElement("li");
+
+            li.innerHTML = `
+                🚨 ${e.type.toUpperCase()} 
+                <br>
+                <a href="https://www.google.com/maps?q=${e.lat},${e.lon}" target="_blank">
+                    View Location
+                </a>
+            `;
+
+            list.appendChild(li);
+        });
+    })
+    .catch(err => console.log(err));
+}, 3000);
+
 </script>
 {% endblock %}
